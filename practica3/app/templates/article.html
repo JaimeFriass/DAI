@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Index</h1>
+    <div class="row main">
+        <div class="col s4">                
+            <div class="collection">
+                <a href="#!" class="collection-item active">Index</a>
+                <a href="/posts" class="collection-item">Posts</a>
+                <a href="#!" class="collection-item">Settings</a>
+                <a href="#!" class="collection-item">Contact</a>
+            </div>
+                
+        </div>
+        <div class="col s8">
+                {% if 'username' in session %}
+                Bienvenido!!!!
+                {% endif %}
+                {{ body }}
+                <br/><br/>
+                Quisque laoreet ipsum non erat viverra mattis. Curabitur consequat 
+                nec velit a pulvinar. Aenean in eleifend sem. Sed eu est quis leo consequat 
+                tincidunt id ut orci. Phasellus pellentesque scelerisque sodales. 
+                Nulla egestas lacus quis lorem sodales, rutrum sagittis enim semper. 
+                Duis efficitur elementum est a gravida. Etiam bibendum vulputate lectus 
+                id ultricies. Mauris ultricies odio quis neque aliquam convallis. 
+                Nunc vulputate, magna quis viverra mollis, felis dolor varius sem, 
+                vel tincidunt lacus dui eu sem. Suspendisse molestie consequat pharetra. 
+                Pellentesque tempor sem nec feugiat mollis.<br/><br/> 
+        </div>
+    </div>
+
+    {% endblock %}
