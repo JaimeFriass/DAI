@@ -10,25 +10,56 @@
             <a href="#!" class="collection-item">Settings</a>
             <a href="#!" class="collection-item">Contact</a>
         </div>
-            
-    </div>
-    <div class="col s8">
+    
         <div class="row">
-            <div class="col s12 m6">
-                <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
-                    <span class="card-title">Card Title</span>
-                    <p>I am a very simple card. I am good at containing small bits of information.
-                    I am convenient because I require little markup to use effectively.</p>
-                </div>
-                <div class="card-action">
-                    <a href="#">This is a link</a>
-                    <a href="#">This is a link</a>
-                </div>
+                <a class="btn waves-effect waves-light" href="/deleteposts">Delete posts</a>
+                <h5>New post</h5>
+                <div class="col s12">
+                    <form action='/newpost' method="POST">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="title" name="title" type="text" class="validate">
+                            <label for="title">Title</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="text" name="text" type="text" class="materialize-textarea"></textarea>
+                            <label for="text">Text</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Post
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div> 
+                    </div>
+                    </form>
                 </div>
             </div>
+            
+    </div>
+    
+    <div class="col s8">
+        <div class="row">
+            {% for item in posts %}
+            <div class="col s12 m6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">{{ item.title }}</span>
+                        <p>{{ item.text }}</p>
+                        <p class="user">{{ item.user }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
+    
+
+    
+
 </div>
 
 {% endblock %}

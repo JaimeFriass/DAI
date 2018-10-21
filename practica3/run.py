@@ -14,8 +14,9 @@ env = Environment(
 	autoescape=select_autoescape(['html', 'xml'])
 )
 
-article = env.get_template('article.html')
+
 error_t   = env.get_template('error.html')
+article = env.get_template('article.html')
 login_t   = env.get_template('login.html')
 posts_t     = env.get_template('posts.html')
 
@@ -28,7 +29,6 @@ def login_method(request):
             password = request.form.get('password')
 
             if username == db['user'] and password == db['passwd']:
-                print("LOGUEADOO")
                 session['username'] = username
                 return True
             else:
@@ -74,7 +74,29 @@ def posts():
     if 'username' not in session:
         return redirect("/login", 302)
 
-    return posts_t.render(session=session)
+    posts = db['posts']
+    return posts_t.render(session=session, posts = posts)
+    
+
+@app.route('/newpost', methods=['get','post'])
+def newpost():
+    if 'username' not in session:
+        return redirect("/login", 302)
+    if request.method == 'POST':
+        title = request.form.get('title')
+        text = request.form.get('text')
+
+    temp = db['posts']
+    temp.append({'title': title, 'text' : text, 'user': session['username']})
+    db['posts'] = temp
+    return redirect("/posts", 302)
+
+@app.route('/deleteposts', methods=['get','post'])
+def deleteposts():
+    if 'username' not in session:
+        return redirect("/login", 302)
+    db['posts'] = []
+    return redirect("/posts", 302)
 
 
 @app.errorhandler(404)
