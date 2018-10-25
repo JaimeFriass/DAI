@@ -19,9 +19,21 @@ error_t   = env.get_template('error.html')
 article = env.get_template('article.html')
 login_t   = env.get_template('login.html')
 posts_t     = env.get_template('posts.html')
+last_pages     = env.get_template('lastpages.html')
 
+// Save current page with log name in db
+def save_page(log):
+    temp = db['pages']
+    temp.append(log)
+    if len(temp) > 5:
+        temp.pop(0)
+    db['pages'] = temp
+    print(temp)
 
+def init_pages():
+    db['pages'] = []
 
+// Checks if user is logued
 def login_method(request):
     if 'username' not in session:
         if request.method == 'POST':
@@ -30,6 +42,7 @@ def login_method(request):
 
             if username == db['user'] and password == db['passwd']:
                 session['username'] = username
+                init_pages()
                 return True
             else:
                 print("ASDADS")
@@ -39,6 +52,7 @@ def login_method(request):
     else:
         return True
 
+////////////  LOGIN PAGE   //////////////
 
 @app.route('/login', methods=['get', 'post'])
 def login_page():
@@ -58,22 +72,26 @@ def logout():
     session.pop('username', None)
     return redirect("/", code=302)
 
+////////////  MAIN PAGE   //////////////
 
 @app.route('/', methods=['get','post'])
 def login():
     if 'username' in session:
-        print("/ -> USERNAME: " + session['username'])
+        save_page("/index")
     else:
         print("/ -> NO SESION")
         if not login_method(request):
             return redirect("/login", code=302)
     return article.render(session=session)
 
+////////////  POSTS PAGE   //////////////
+
 @app.route('/posts', methods=['get','post'])
 def posts():
     if 'username' not in session:
         return redirect("/login", 302)
 
+    save_page("/posts")
     posts = db['posts']
     return posts_t.render(session=session, posts = posts)
     
@@ -98,6 +116,15 @@ def deleteposts():
     db['posts'] = []
     return redirect("/posts", 302)
 
+////////////  LAST PAGES   //////////////
+
+@app.route('/last-pages', methods=['get','post'])
+def lastPages():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    return last_pages.render(session = session, pages = db['pages'])
+    
 
 @app.errorhandler(404)
 def page_not_found(error):

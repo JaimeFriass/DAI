@@ -6,3 +6,25 @@
     margin-top: 50px;
     margin-bottom: 250px;
 }
+
+.brand-logo {
+    margin-left: 20px;
+    text-shadow: 2px 2px rgb(19, 19, 19) 4px;
+}
+
+.new-post {
+    border: solid rgb(224, 224, 224) 0.5px;
+    padding: 20px;
+    border-radius: 2px;
+}
+.new-post input[type="text"] {
+    margin-top: 0px;
+}
+
+.new-post .row {
+    margin-bottom: 0px;
+}
+
+.new-post .input-field {
+    margin: 7px;
+}
