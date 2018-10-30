@@ -4,8 +4,6 @@ from pickleshare import *
 
 ''' PICKLESHARE '''
 db = PickleShareDB('~/testpickleshare')
-db['user'] = "Paco"
-db['passwd'] = "Paco"
 
 app = Flask(__name__)
 
@@ -14,14 +12,16 @@ env = Environment(
 	autoescape=select_autoescape(['html', 'xml'])
 )
 
-
+""" TEMPLATES """
 error_t   = env.get_template('error.html')
 article = env.get_template('article.html')
 login_t   = env.get_template('login.html')
 posts_t     = env.get_template('posts.html')
 last_pages     = env.get_template('lastpages.html')
+register_t     = env.get_template('register.html')
+profile_t     = env.get_template('profile.html')
 
-// Save current page with log name in db
+"""Save current page with log name in db"""
 def save_page(log):
     temp = db['pages']
     temp.append(log)
@@ -33,36 +33,47 @@ def save_page(log):
 def init_pages():
     db['pages'] = []
 
-// Checks if user is logued
+""" Checks if user is logued """
 def login_method(request):
     if 'username' not in session:
         if request.method == 'POST':
             username = request.form.get('username')
             password = request.form.get('password')
 
-            if username == db['user'] and password == db['passwd']:
+            if db[username][1] == password:
                 session['username'] = username
                 init_pages()
                 return True
             else:
-                print("ASDADS")
+                print("ERROR AL LOGUEO!!!!!!!!!!!!!!!!!!!")
                 return False
         else:
             return True
     else:
         return True
 
-////////////  LOGIN PAGE   //////////////
 
-@app.route('/login', methods=['get', 'post'])
+
+"""////////////  LOGIN PAGE   //////////////"""
+
+@app.route('/login')
 def login_page():
     if 'username' in session:
         return redirect("/", code=302)
-    
+    print("LOGIN SIN ARGUMENTOS")
+
+    return login_t.render(session=session, login_page=True)
+
+@app.route('/login', methods=['POST'])
+def post_login_page():
+    if 'username' in session:
+        return redirect("/", code=302)
+
     if not login_method(request):
         error = "Username and password doesn't match in our database."
     else:
         error = ""
+        print("Logueado correcto?")
         return redirect("/", code=302)
 
     return login_t.render(session=session, error = error, login_page = True)
@@ -72,7 +83,38 @@ def logout():
     session.pop('username', None)
     return redirect("/", code=302)
 
-////////////  MAIN PAGE   //////////////
+
+@app.route('/register')
+def register():
+    if 'username' in session:
+        return redirect("/", code=302)
+
+    return register_t.render(session=session)
+
+
+@app.route('/register', methods=['POST'])
+def post_register():
+    if 'username' in session:
+        return redirect("/", code=302)
+
+    error = ""
+
+    if request.method == 'POST':
+        if len(request.form.get('username')) > 3:
+            db[request.form.get('username')] = [request.form.get('name'),request.form.get('password')]
+            session['username'] = request.form.get('username')
+            init_pages()
+            return redirect("/", code=302)
+        else:
+            error = "Username too short!"
+
+    return register_t.render(session=session, error=error)
+
+@app.route('/user/<user>', methods=['GET'])
+def profile(user):
+    return profile_t.render(session=session, profile=db[user], user=user)
+
+"""////////////  MAIN PAGE   //////////////"""
 
 @app.route('/', methods=['get','post'])
 def login():
@@ -82,9 +124,10 @@ def login():
         print("/ -> NO SESION")
         if not login_method(request):
             return redirect("/login", code=302)
+        return redirect("/login", code=302)
     return article.render(session=session)
 
-////////////  POSTS PAGE   //////////////
+"""////////////  POSTS PAGE   //////////////"""
 
 @app.route('/posts', methods=['get','post'])
 def posts():
@@ -116,7 +159,7 @@ def deleteposts():
     db['posts'] = []
     return redirect("/posts", 302)
 
-////////////  LAST PAGES   //////////////
+"""////////////  LAST PAGES   //////////////"""
 
 @app.route('/last-pages', methods=['get','post'])
 def lastPages():

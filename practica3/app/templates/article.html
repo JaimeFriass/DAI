@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Main page</h1>
+<div class="container">
+<h1>Main pages</h1>
     <div class="row main">
         <div class="col s4">                
             <div class="collection">
@@ -24,4 +25,11 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.parallax');
+            var instances = M.Parallax.init(elems, options);
+            });
+        </script>
+</div>
     {% endblock %}

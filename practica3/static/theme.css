@@ -4,7 +4,7 @@
 
 .main {
     margin-top: 50px;
-    margin-bottom: 250px;
+    margin-bottom: 50px;
 }
 
 .brand-logo {
@@ -16,6 +16,7 @@
     border: solid rgb(224, 224, 224) 0.5px;
     padding: 20px;
     border-radius: 2px;
+    margin-top: 50px;
 }
 .new-post input[type="text"] {
     margin-top: 0px;
@@ -27,4 +28,8 @@
 
 .new-post .input-field {
     margin: 7px;
+}
+
+.parallax-container {
+    height: 160px;
 }

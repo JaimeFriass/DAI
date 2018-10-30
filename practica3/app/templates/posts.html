@@ -1,6 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
+
+<div class="container">
 <h1>Posts</h1>
+
+<div class="fixed-action-btn">
+    <a href="/deleteposts" class="btn-floating btn-large light-blue lighten-1">
+      <i class="large material-icons">delete</i>
+    </a>
+  </div>
+        
 <div class="row main">
     <div class="col s4">
             
@@ -11,10 +20,9 @@
             <a href="#!" class="collection-item">Settings</a>
         </div>
     
-        <div class="row">
-                <a class="btn waves-effect waves-light" href="/deleteposts">Delete posts</a>
-                <h5>New post</h5>
+        <div class="row">              
                 <div class="col s12 new-post">
+                    <h5>New post</h5>
                     <form action='/newpost' method="POST">
                     <div class="row">
                         <div class="input-field col s12">
@@ -56,10 +64,14 @@
             {% endfor %}
         </div>
     </div>
-    
 
-    
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(elems, options);
+        });
+    </script>
+</div>
 </div>
 
 {% endblock %}

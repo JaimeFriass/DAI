@@ -18,7 +18,8 @@
                     <li><input class="nav-input" placeholder="User" name="username" id="username" type="text" class="validate"></li>
                     <li><input class="nav-input" placeholder="Password" name="password" id="password" type="password" class="validate"></li>
                     <input type="hidden" name="logout" id="logout" value="0">
-                    <li><button type="submit" class="waves-effect waves-light btn-large">Login <i class="material-icons right">save_alt</i></button></li>
+                    <li><button type="submit" class="waves-effect waves-light btn">Login</button></li>
+                    <li><a href="/register" class="waves-effect waves-light btn">Register <i class="material-icons right">save_alt</i></a></li>
                 </form>
                 {% else %}
                 <form action='/logout' method="POST">
@@ -30,9 +31,15 @@
             </ul>
         </div>
     </nav>
-<div class="container">
+    <div class="parallax-container">
+        <div class="parallax"><img src="static/img/wall.jpg"></div>
+    </div>  
+
     {% block content %}{% endblock %}
-</div>
+
+    <div class="parallax-container">
+        <div class="parallax"><img src="static/img/wall.jpg"></div>
+    </div>  
 
 <footer class="page-footer #0097a7 cyan darken-2">
     <div class="container">
