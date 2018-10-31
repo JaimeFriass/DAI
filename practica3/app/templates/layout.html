@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="/static/theme.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/static/favicon.ico">
 </head>
 <body>
     <nav>
@@ -23,7 +24,7 @@
                 </form>
                 {% else %}
                 <form action='/logout' method="POST">
-                    <li><a href="">{{ session['username'] }}</a></li>
+                    <li><a href="/user/{{ session['username'] }}">{{ session['username'] }}</a></li>
                     <li><a href='/logout' type="submit" class="waves-effect waves-light btn">Log out <i class="material-icons left">vertical_align_top</i></a></li>
                 </form>
                 {% endif %}
@@ -31,15 +32,9 @@
             </ul>
         </div>
     </nav>
-    <div class="parallax-container">
-        <div class="parallax"><img src="static/img/wall.jpg"></div>
-    </div>  
+
 
     {% block content %}{% endblock %}
-
-    <div class="parallax-container">
-        <div class="parallax"><img src="static/img/wall.jpg"></div>
-    </div>  
 
 <footer class="page-footer #0097a7 cyan darken-2">
     <div class="container">

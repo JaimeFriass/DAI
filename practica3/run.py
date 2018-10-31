@@ -13,6 +13,7 @@ env = Environment(
 )
 
 """ TEMPLATES """
+index_t = env.get_template('index.html')
 error_t   = env.get_template('error.html')
 article = env.get_template('article.html')
 login_t   = env.get_template('login.html')
@@ -114,9 +115,28 @@ def post_register():
 def profile(user):
     return profile_t.render(session=session, profile=db[user], user=user)
 
+"""////////////  INDEX PAGE   //////////////"""
+
+@app.route('/')
+def index():
+    error = ""
+    if 'username' in session:
+        save_page("/index")
+
+    return index_t.render(session=session)
+
+@app.route('/', methods=['post'])
+def post_index():
+    error = ""
+    if 'username' in session:
+        save_page("/index")
+
+    login_method(request)
+
+    return index_t.render(session=session)
 """////////////  MAIN PAGE   //////////////"""
 
-@app.route('/', methods=['get','post'])
+@app.route('/feed', methods=['get','post'])
 def login():
     if 'username' in session:
         save_page("/index")

@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
 
 <div class="container">
 <h1>Posts</h1>
@@ -14,10 +17,10 @@
     <div class="col s4">
             
         <div class="collection">
-            <a href="/" class="collection-item">Index</a>
-            <a href="/posts" class="collection-item active">Posts</a>
-            <a href="/last-pages" class="collection-item">Last pages</a>
-            <a href="#!" class="collection-item">Settings</a>
+            <a href="/" class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
+            <a href="/posts" class="collection-item active"><i class="material-icons left">view_module</i> Posts</a>
+            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+            <a href="#!" class="collection-item"><i class="material-icons left">settings</i> Settings</a>
         </div>
     
         <div class="row">              
@@ -56,7 +59,7 @@
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
                         <span class="card-title">{{ item.title }}</span>
-                        <p>{{ item.text }}</p>
+                        <p class="text">{{ item.text }}</p>
                         <p class="user">{{ item.user }}</p>
                     </div>
                 </div>
@@ -73,5 +76,9 @@
     </script>
 </div>
 </div>
+
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
 
 {% endblock %}

@@ -33,3 +33,56 @@
 .parallax-container {
     height: 160px;
 }
+
+.banner {
+    height: 550px;
+    color: white;
+    text-align: center;
+    vertical-align: 50%;
+}
+
+.banner h1 {
+    margin-top: 150px;
+    font-size: 57pt;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.301);
+}
+
+.banner h3 {
+    font-size: 25pt;
+    margin-top: -35px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.301);
+}
+
+/* POSTS */
+.card-content .card-title {
+    
+}
+.card-content .text {
+
+}
+
+.card-content .user {
+    text-align: right;
+    color: rgba(255, 255, 255, 0.418);
+    text-transform: uppercase;
+}
+
+
+.fondo {
+    background-image: url(/static/img/wall.jpg);
+    background-position: center;
+    height: auto;
+    margin: 0;
+    padding: 20px;
+}
+
+.login-cont {
+    background: none;
+}
+
+.login-box {
+    background-color: white;
+    border-radius: 5px;
+    padding-left: 55px !important;
+    padding-right: 55px !important;
+}
