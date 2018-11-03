@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
+
+<div class="container">
+<h1>Settings</h1>
+        
+<div class="row main">
+    <div class="col s4">
+            
+        <div class="collection">
+            <a href="/" class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
+            <a href="/posts" class="collection-item"><i class="material-icons left">view_module</i> Posts</a>
+            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+            <a href="#" class="collection-item active"><i class="material-icons left">settings</i> Settings</a>
+        </div>
+    </div>
+    <div class="col s8">
+       
+                    <h5>My profile</h5>
+                    <form action='' method="POST">
+                    <div class="row">
+                        <p>{{ print_name }}</p>
+                        <div class="input-field col s12">
+                            <input id="name" name="name" type="text" class="validate">
+                            <label for="name">Display name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p>{{ print_password }}</p>
+                        <div class="input-field col s12">
+                            <input id="password" name="password" type="password" class="validate">
+                            <label for="password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Save
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div> 
+                    </div>
+                    </form>    
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(elems, options);
+        });
+    </script>
+</div>
+</div>
+
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
+
+{% endblock %}

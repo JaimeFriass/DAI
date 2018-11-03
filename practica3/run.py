@@ -15,12 +15,12 @@ env = Environment(
 """ TEMPLATES """
 index_t = env.get_template('index.html')
 error_t   = env.get_template('error.html')
-article = env.get_template('article.html')
 login_t   = env.get_template('login.html')
 posts_t     = env.get_template('posts.html')
 last_pages     = env.get_template('lastpages.html')
 register_t     = env.get_template('register.html')
 profile_t     = env.get_template('profile.html')
+settings_t = env.get_template('settings.html')
 
 """Save current page with log name in db"""
 def save_page(log):
@@ -29,7 +29,6 @@ def save_page(log):
     if len(temp) > 5:
         temp.pop(0)
     db['pages'] = temp
-    print(temp)
 
 def init_pages():
     db['pages'] = []
@@ -46,7 +45,6 @@ def login_method(request):
                 init_pages()
                 return True
             else:
-                print("ERROR AL LOGUEO!!!!!!!!!!!!!!!!!!!")
                 return False
         else:
             return True
@@ -61,7 +59,6 @@ def login_method(request):
 def login_page():
     if 'username' in session:
         return redirect("/", code=302)
-    print("LOGIN SIN ARGUMENTOS")
 
     return login_t.render(session=session, login_page=True)
 
@@ -74,7 +71,6 @@ def post_login_page():
         error = "Username and password doesn't match in our database."
     else:
         error = ""
-        print("Logueado correcto?")
         return redirect("/", code=302)
 
     return login_t.render(session=session, error = error, login_page = True)
@@ -90,7 +86,7 @@ def register():
     if 'username' in session:
         return redirect("/", code=302)
 
-    return register_t.render(session=session)
+    return register_t.render(session=session, login_page = True)
 
 
 @app.route('/register', methods=['POST'])
@@ -99,7 +95,6 @@ def post_register():
         return redirect("/", code=302)
 
     error = ""
-
     if request.method == 'POST':
         if len(request.form.get('username')) > 3:
             db[request.form.get('username')] = [request.form.get('name'),request.form.get('password')]
@@ -121,7 +116,7 @@ def profile(user):
 def index():
     error = ""
     if 'username' in session:
-        save_page("/index")
+        save_page("/")
 
     return index_t.render(session=session)
 
@@ -131,9 +126,14 @@ def post_index():
     if 'username' in session:
         save_page("/index")
 
-    login_method(request)
+    if request.method == "POST":
+        if len(request.form.get("username")) > 3 and len(request.form.get("password")):
+            login_method(request)
+        else:
+            return redirect("/login", code=302)
 
     return index_t.render(session=session)
+
 """////////////  MAIN PAGE   //////////////"""
 
 @app.route('/feed', methods=['get','post'])
@@ -141,7 +141,6 @@ def login():
     if 'username' in session:
         save_page("/index")
     else:
-        print("/ -> NO SESION")
         if not login_method(request):
             return redirect("/login", code=302)
         return redirect("/login", code=302)
@@ -187,6 +186,38 @@ def lastPages():
         return redirect("/login", 302)
 
     return last_pages.render(session = session, pages = db['pages'])
+
+
+@app.route('/settings')
+def settings():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    return settings_t.render(session = session)
+
+@app.route('/settings', methods=['post'])
+def post_settings():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    print_name = ""
+    print_password = ""
+
+    if request.method == 'POST':
+        name = request.form.get('name')
+        password = request.form.get('password')
+
+        if name != '':
+            """ Save name """
+            db[session['username']][0] = name
+            print_name = "Display name changed successfully!"
+            
+        if password != '':
+            db[session['username']][1] = password
+            print_password = "Password changed successfully!"
+
+
+    return settings_t.render(session = session, print_name = print_name, print_password = print_password)
     
 
 @app.errorhandler(404)
