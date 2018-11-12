@@ -1,19 +1,24 @@
 from flask import Flask, request, render_template, session, redirect
 from jinja2 import Template, Environment, PackageLoader, select_autoescape
+from bson import ObjectId
 import pymongo
 
-# Conecting to Mongo DB
+# TO-DO: Hacer responsiva
+
+#####    MONGO DB       #####
 try:
-    conn = pymongo.MongoClient()
+    conn = pymongo.MongoClient('localhost', 27017)
     print("Connected successfully")
 except pymongo.errors.ConnectionFailure:
-    print ("ASDSAD")
+    print ("Error connecting")
 
+db = conn['test']
 
 db2 = conn.mydb
+restaurants = db['restaurants']
 
+####  Flask Config  ####
 app = Flask(__name__)
-
 env = Environment(
 	loader=PackageLoader('app', 'templates'),
 	autoescape=select_autoescape(['html', 'xml'])
@@ -27,6 +32,8 @@ posts_t     = env.get_template('posts.html')
 last_pages     = env.get_template('lastpages.html')
 register_t     = env.get_template('register.html')
 profile_t     = env.get_template('profile.html')
+restaurants_t = env.get_template('restaurants.html')
+view_rest = env.get_template('view_rest.html')
 settings_t = env.get_template('settings.html')
 
 """Save current page with log name in db"""
@@ -202,6 +209,60 @@ def lastPages():
 
     return last_pages.render(session = session, pages = db2.pages.find_one({"username": session['username']})['pages'])
 
+@app.route('/restaurants')
+def restaurant_list():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    cursor = restaurants.find().limit(30)
+    array = []
+
+    for r in cursor:
+        array.append(r)
+
+    return restaurants_t.render(session = session, restaurants = array)
+
+# TO-DO: Implementar búsqueda
+@app.route('/restaurant/<id_rest>', methods=['GET'])
+def restaurant_view(id_rest):
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+
+    oid = ObjectId(id_rest)
+
+    rest = restaurants.find_one({"_id": oid})
+
+    print(repr(rest))
+    print(oid)
+
+    return view_rest.render(session = session, restaurant = rest)
+
+@app.route('/newrestaurant', methods=['get', 'post'])
+def newRestaurant():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    if request.method == "POST":
+        name = request.form.get('name')
+        coordinates = [float(request.form.get('coord1')), float(request.form.get('coord2'))]
+        print(request.form.get('coord1'))
+        #print("Name : " + name + "  CORDS: " + coordinates[0])
+        if len(name) > 3 and coordinates != None:
+            restaurants.insert({"location": {"coordinates": coordinates, "type":"Point"}, "name": name})
+        else:
+            return redirect("/error", 302)
+
+    return redirect("/restaurants", 302)
+
+@app.route('/deleterestaurant/<id_res>', methods=['get'])
+def deleteRestaurant(id_res):
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    restaurants.delete_one({"_id": ObjectId(id_res)})
+
+    return redirect("/restaurants", 302)
 
 @app.route('/settings')
 def settings():
