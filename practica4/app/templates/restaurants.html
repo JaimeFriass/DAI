@@ -53,8 +53,7 @@
   </div>
         
 <div class="row main">
-    <div class="col s4">
-            
+    <div class="col s12 m4 l4">
         <div class="collection">
             <a href="/" class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
             <a href="/posts" class="collection-item"><i class="material-icons left">view_module</i> Posts</a>
@@ -62,15 +61,20 @@
             <a href="/restaurants" class="collection-item active"><i class="material-icons left">restaurant</i> Restaurants</a>
             <a href="/settings" class="collection-item"><i class="material-icons left">settings</i> Settings</a>
         </div>
-    
+
+        <p>{{ results }} results.</p>
     </div>
+
     
-    <div class="col s8">
+    <div class="col s12 m8 l8">
         <div class="row">
+            <form action="/restaurants" method="get">
             <div class="input-field col s12">
-                <input id="search" name="search" type="text" class="validate">
-                <label for="search">Search for restaurants</label>
+                <input id="search" name="s" type="text" class="validate">
+
+                <label for="s">Search for restaurants</label>
             </div>
+            </form>
             <table>
                 <thead>
                     <tr>

@@ -3,8 +3,6 @@ from jinja2 import Template, Environment, PackageLoader, select_autoescape
 from bson import ObjectId
 import pymongo
 
-# TO-DO: Hacer responsiva
-
 #####    MONGO DB       #####
 try:
     conn = pymongo.MongoClient('localhost', 27017)
@@ -34,6 +32,7 @@ register_t     = env.get_template('register.html')
 profile_t     = env.get_template('profile.html')
 restaurants_t = env.get_template('restaurants.html')
 view_rest = env.get_template('view_rest.html')
+edit_rest = env.get_template('edit_rest.html')
 settings_t = env.get_template('settings.html')
 
 """Save current page with log name in db"""
@@ -124,7 +123,10 @@ def profile(user):
         save_page("/user/" + user)
 
     print(db2.users.find_one({"username": user}))
-    return profile_t.render(session=session, profile=db2.users.find_one({"username": user})['name'], user=user)
+    print(user)
+    print(db2.users.find_one())
+
+    return profile_t.render(session=session, profile=db2.users.find_one({"username": user}), user=user)
 
 """////////////  INDEX PAGE   //////////////"""
 
@@ -209,35 +211,81 @@ def lastPages():
 
     return last_pages.render(session = session, pages = db2.pages.find_one({"username": session['username']})['pages'])
 
-@app.route('/restaurants')
-def restaurant_list():
+"""////////////  RESTAURANTS   //////////////"""
+
+# Restaurants view
+# * If GET search is active, view results
+# * else view all results
+@app.route('/restaurants', methods=['get'])
+def search_restaurant():
     if 'username' not in session:
         return redirect("/login", 302)
 
-    cursor = restaurants.find().limit(30)
+    name = request.args.get('s', '')
+
+    if len(name) != 0:
+        cursor = restaurants.find({"name": {'$regex': name}}).limit(25)
+    else:
+        cursor = restaurants.find().limit(25)
+
     array = []
 
     for r in cursor:
         array.append(r)
 
-    return restaurants_t.render(session = session, restaurants = array)
+    return restaurants_t.render(session = session, restaurants = array, results = cursor.count())
 
-# TO-DO: Implementar búsqueda
+# Restaurant view page
+# * View restaurant by *id_rest* id
 @app.route('/restaurant/<id_rest>', methods=['GET'])
 def restaurant_view(id_rest):
     if 'username' not in session:
         return redirect("/login", 302)
 
-
     oid = ObjectId(id_rest)
-
     rest = restaurants.find_one({"_id": oid})
-
-    print(repr(rest))
-    print(oid)
 
     return view_rest.render(session = session, restaurant = rest)
 
+# Restaurant edit page
+# * Edit restaurant by *id_rest* id
+@app.route('/editrestaurant/<id_rest>', methods=['GET'])
+def restaurant_edit(id_rest):
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    oid = ObjectId(id_rest)
+    rest = restaurants.find_one({"_id": oid})
+
+    return edit_rest.render(session = session, restaurant = rest)
+
+# Confirm restaurant edit
+# * When edited, this page saves data to DB
+@app.route('/saverestaurant', methods=['POST'])
+def restaurant_save():
+    if 'username' not in session:
+        return redirect("/login", 302)
+
+    if request.method == "POST":
+        name = request.form.get('name')
+        rid = request.form.get('rid')
+        coordinates = [ float(request.form.get('lat')), float(request.form.get('long'))]
+        print(name)
+        print(coordinates)
+        print(rid)
+
+        if len(name) > 3 and coordinates != None:
+            query = {"_id": rid}
+            newvalues = {"$set": {"location": {"coordinates": coordinates, "type": "Point"}, "name": name} }
+            print(restaurants.update_one( query, newvalues) )
+        else:
+            return redirect("/error", 302)
+
+    return redirect("/restaurants", 302)
+
+
+# Create restaurant
+# * Saves data from a new restaurant through a POST method
 @app.route('/newrestaurant', methods=['get', 'post'])
 def newRestaurant():
     if 'username' not in session:
@@ -246,8 +294,6 @@ def newRestaurant():
     if request.method == "POST":
         name = request.form.get('name')
         coordinates = [float(request.form.get('coord1')), float(request.form.get('coord2'))]
-        print(request.form.get('coord1'))
-        #print("Name : " + name + "  CORDS: " + coordinates[0])
         if len(name) > 3 and coordinates != None:
             restaurants.insert({"location": {"coordinates": coordinates, "type":"Point"}, "name": name})
         else:
@@ -255,6 +301,8 @@ def newRestaurant():
 
     return redirect("/restaurants", 302)
 
+# Delete restaurant
+# * When visited with *id_rest* id, removes it
 @app.route('/deleterestaurant/<id_res>', methods=['get'])
 def deleteRestaurant(id_res):
     if 'username' not in session:
@@ -263,6 +311,8 @@ def deleteRestaurant(id_res):
     restaurants.delete_one({"_id": ObjectId(id_res)})
 
     return redirect("/restaurants", 302)
+
+"""////////////  SETTINGS   //////////////"""
 
 @app.route('/settings')
 def settings():
