@@ -6,11 +6,16 @@ from . import views
 urlpatterns = [
   url(r'^$', views.index, name='index'),
   # User settings
-  url(r'^login/', views.login_action, name='login'),
-  url(r'^logout/', views.logout_action, name='logout'),
+
   url(r'^register/', views.register_action, name='register'),
   url(r'^settings/', views.settings, name='settings'),
   url(r'^user/(?P<username>[-\w]+)$', views.user_view, name='user_view'),
+
+  url(r'^login/$', views.login_action, {'template_name': 'login.html'},
+        name='login'),
+  url(r'^logout/$', views.logout_action,
+        {'next_page': url('login', views.login_action)}, name='logout'),
+  
 
   # Restaurants
   url(r'^index/', views.index, name='index'),

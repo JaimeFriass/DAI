@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
 
-from restaurants.views import login_action, register_action, index
+from restaurants.views import login_action, register_action, index, user_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', index, name='index'),
     url(r'^login/', login_action, name="login"),
     url(r'^register/', register_action, name="register"),
+    url(r'^user/(?P<username>[-\w]+)$', user_view, name='user_view'),
     url(r'^restaurants/', include('restaurants.urls')),
 ]

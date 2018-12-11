@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 
 def user_view(request, username):
     context = {
-        "profile": User.objects.get(username=username)
+        "profile": User.objects.get(username=username),
+        "session": request.session,
+        "username": request.session['username']
     }
     return render(request, 'profile.html', context)
 
@@ -16,6 +18,8 @@ def restaurant_view(request, id):
     rest = restaurants.find_one({"_id": oid})
     print( rest['location']['coordinates'][0])
     context = {
+        "session": request.session,
+        "username": request.session['username'],
         "restaurant": rest,
         "coord0": rest['location']['coordinates'][1],
         "coord1": rest['location']['coordinates'][0]
@@ -26,6 +30,8 @@ def restaurant_edit(request, id):
     oid = ObjectId(id)
     rest = restaurants.find_one({"_id": oid})
     context = {
+        "session": request.session,
+        "username": request.session['username'],
         "restaurant": rest,
         "coord0": rest['location']['coordinates'][1],
         "coord1": rest['location']['coordinates'][0]
@@ -35,8 +41,10 @@ def restaurant_edit(request, id):
 def restaurants_view(request):
     iterator = restaurants.find().limit(30)
     context = {
+        "session": request.session,
+        "username": request.session['username'],
         "restaurants": list(iterator),
-        "results": restaurants.find().count()
+        "results": restaurants.find().count(),
     }
     return render(request, 'restaurants.html', context)
 
@@ -57,7 +65,9 @@ def settings(request):
             print("Error!")
 
     context = {
-        "form": form
+        "form": form,
+        "session": request.session,
+        "username": request.session['username']
         }
 
     return render(request, 'settings.html', context)

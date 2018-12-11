@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
+{% block title %} Restaurants {% endblock %}
+{% block restaurants %}active{% endblock %}
 {% block content %}
 <div class="parallax-container">
     <div class="parallax"><img src="{% static 'img/wall.jpg' %}"></div>
@@ -54,19 +56,7 @@
   </div>
         
 <div class="row main">
-    <div class="col s12 m4 l4">
-        <div class="collection">
-            <a href={% url 'index' %} class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
-            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
-            <a href={% url 'restaurants_view' %} class="collection-item active"><i class="material-icons left">restaurant</i> Restaurants</a>
-            <a href={% url 'settings' %}  class="collection-item"><i class="material-icons left">settings</i> Settings</a>
-        </div>
-
-        <p>{{ results }} results.</p>
-    </div>
-
-    
-    <div class="col s12 m8 l8">
+    <div class="col s12 m12 l12">
         <div class="row">
             <form action="/restaurants" method="get">
             <div class="input-field col s12">
@@ -75,6 +65,7 @@
                 <label for="s">Search for restaurants</label>
             </div>
             </form>
+            <p>{{ results }} results.</p>
             <table>
                 <thead>
                     <tr>

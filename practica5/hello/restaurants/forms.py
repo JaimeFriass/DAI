@@ -37,3 +37,13 @@ class SettingsForm(forms.ModelForm):
     class Meta:
         model  = User
         fields = ('first_name', 'password')
+
+'''
+class RestaurantSearch(forms.ModelForm):
+    keyword = forms.CharField(max_length=20,\
+                widget=forms.TextInput(attrs={'class': 'form-control'}),\
+                label='Search')
+
+    class Meta:
+        fields = ('keyword')
+'''

@@ -1,23 +1,16 @@
 {% extends "layout.html" %}
+{% block settings %}active{% endblock %}
 {% block content %}
+{% load static %}
 <div class="parallax-container">
-    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+    <div class="parallax"><img src={% static 'img/wall.jpg' %}></div>
 </div>  
 
 <div class="container">
 <h1>Settings</h1>
         
 <div class="row main">
-    <div class="col s12 m4 l4">
-            
-        <div class="collection">
-            <a href={% url 'index' %} class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
-            <a href="" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
-            <a href={% url 'restaurants_view' %} class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
-            <a href={% url 'settings' %} class="collection-item active"><i class="material-icons left">settings</i> Settings</a>
-        </div>
-    </div>
-    <div class="col s12 m8 s8">
+    <div class="col l6 m12 s12">
        
                     <h5>My profile</h5>
                     <form action='' method="POST">
@@ -46,15 +39,6 @@
                             <label for="newpassword">Password</label>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <button class="btn waves-effect waves-light" type="submit" name="action">Save
-                                <i class="material-icons right">send</i>
-                            </button>
-                        </div> 
-                    </div>
-                    
-
                     -->
                         
     </div>
@@ -69,7 +53,7 @@
 </div>
 
 <div class="parallax-container">
-    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+    <div class="parallax"><img src={% static 'img/wall.jpg' %}></div>
 </div>  
 
 {% endblock %}

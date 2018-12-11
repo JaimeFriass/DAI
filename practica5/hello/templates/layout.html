@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Hello!</title>
+    <title>{% block title %}Hello!{% endblock %}</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="/static/theme.css">
@@ -16,7 +16,12 @@
             {% comment %}
             {% if not login_page %}
             {% endcomment %}
+            <li class="{% block home %}{% endblock %}"><a href={% url 'index' %}><i class="material-icons left">bookmark</i> Home</a></li>
+            <li class="{% block last_pages %}{% endblock %}"><a href="#"><i class="material-icons left">history</i> Last pages</a></li>
+            <li class="{% block restaurants %}{% endblock %}"><a href={% url 'restaurants_view' %}><i class="material-icons left">restaurant</i> Restaurants</a></li>
+            <li class="{% block settings %}{% endblock %}"><a href={% url 'settings' %}><i class="material-icons left">settings</i> Settings</a></li>
 
+            {% block login %}
                 {% if 'username' not in session %}
                 <form action='' method="POST">
                     <li><input class="nav-input" placeholder="User" name="username" id="username" type="text" class="validate"></li>
@@ -26,11 +31,10 @@
                     <li><a href={% url 'register' %} class="waves-effect waves-light btn">Register <i class="material-icons right">save_alt</i></a></li>
                 </form>
                 {% else %}
-                <form action={% url 'logout' %} method="POST">
                     <li><a href="/user/{{ username }}">{{ username }}</a></li>
                     <li><a href={% url 'logout' %} type="submit" class="waves-effect waves-light btn">Log out <i class="material-icons left">vertical_align_top</i></a></li>
-                </form>
                 {% endif %}
+            {% endblock %}
 
             {% comment %}
             {% endif %}

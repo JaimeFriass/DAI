@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load static %}
+{% block home %} active {% endblock %}
 {% block content %}
 <div class="parallax-container banner">
     
@@ -16,16 +17,7 @@
 </div>  
 <div class="container">
     <div class="row main">
-        <div class="col s12 m4 l4">                
-            <div class="collection">
-                <a href={% url 'index' %} class="collection-item active"><i class="material-icons left">bookmark</i> Index</a>
-                <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
-                <a href={% url 'restaurants_view' %} class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
-                <a href={% url 'settings' %} class="collection-item"><i class="material-icons left">settings</i> Settings</a>
-            </div>
-                
-        </div>
-        <div class="col s12 m8 l8">
+        <div class="col s12 m12 l12">
                 Quisque laoreet ipsum non erat viverra mattis. Curabitur consequat 
                 nec velit a pulvinar. Aenean in eleifend sem. Sed eu est quis leo consequat 
                 tincidunt id ut orci. Phasellus pellentesque scelerisque sodales. 

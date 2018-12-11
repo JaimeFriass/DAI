@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
+{% load static %}
 <div class="parallax-container">
-    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+    <div class="parallax"><img src={% static 'img/wall.jpg' %}></div>
 </div>  
 <div class="container">
 <div class="row main">
@@ -17,7 +18,7 @@
 </div>
 </div>
 <div class="parallax-container">
-    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+    <div class="parallax"><img src={% static 'img/wall.jpg' %}></div>
 </div>  
 
 {% endblock %}
