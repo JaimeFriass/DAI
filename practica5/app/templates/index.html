@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="parallax-container banner">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+    <h1>Hello</h1>
+    {% if 'username' not in session %}
+        <a class="btn-large waves-effect waves-light cyan darken-3" href="/login"><i class="material-icons left">trending_flat</i> Login</a>
+    {% else %}
+        <h3>{{ session['username'] }}</h1>
+        <a class="btn-large waves-effect waves-light blue lighten-1" href="/posts"><i class="material-icons left">view_module</i> Posts</a>
+    {% endif %}
+</div>  
+<div class="container">
+    <div class="row main">
+        <div class="col s12 m4 l4">                
+            <div class="collection">
+                <a href="/" class="collection-item active"><i class="material-icons left">bookmark</i> Index</a>
+                <a href="/posts" class="collection-item"><i class="material-icons left">view_module</i> Posts</a>
+                <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+                <a href="/restaurants" class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
+                <a href="/settings" class="collection-item"><i class="material-icons left">settings</i> Settings</a>
+            </div>
+                
+        </div>
+        <div class="col s12 m8 l8">
+                Quisque laoreet ipsum non erat viverra mattis. Curabitur consequat 
+                nec velit a pulvinar. Aenean in eleifend sem. Sed eu est quis leo consequat 
+                tincidunt id ut orci. Phasellus pellentesque scelerisque sodales. 
+                Nulla egestas lacus quis lorem sodales, rutrum sagittis enim semper. 
+                Duis efficitur elementum est a gravida. Etiam bibendum vulputate lectus 
+                id ultricies. Mauris ultricies odio quis neque aliquam convallis. 
+                Nunc vulputate, magna quis viverra mollis, felis dolor varius sem, 
+                vel tincidunt lacus dui eu sem. Suspendisse molestie consequat pharetra. 
+                Pellentesque tempor sem nec feugiat mollis.<br/><br/> 
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.parallax');
+            var instances = M.Parallax.init(elems, options);
+            });
+        </script>
+</div>
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
+    {% endblock %}

@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<div class="parallax-container">
+    <div class="parallax"><img src="{% static 'img/wall.jpg' %}"></div>
+</div>  
+
+<div class="container">
+<h1>Restaurants</h1>
+
+<div class="fixed-action-btn">
+    <a href="#add" class="btn-floating btn-large light-blue lighten-1 modal-trigger">
+      <i class="large material-icons">add</i>
+    </a>
+  </div>
+
+  <!-- Modal Structure -->
+  <div id="add" class="modal">
+    <div class="modal-content">
+      <h4>Add new restaurant</h4>
+      <div class="row">              
+        <div class="col s12">
+            <form action='/newrestaurant' method="POST">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="name" name="name" type="text" class="validate">
+                    <label for="name">Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <textarea id="coord1" name="coord1" type="number" class="materialize-textarea"></textarea>
+                    <label for="coord1">Lat</label>
+                </div>
+                <div class="input-field col s6">
+                    <textarea id="coord2" name="coord2" type="number" class="materialize-textarea"></textarea>
+                    <label for="coord2">Long</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">Add
+                        <i class="material-icons right">add</i>
+                    </button>
+                </div> 
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+        
+<div class="row main">
+    <div class="col s12 m4 l4">
+        <div class="collection">
+            <a href={% url 'index' %} class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
+            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+            <a href={% url 'restaurants_view' %} class="collection-item active"><i class="material-icons left">restaurant</i> Restaurants</a>
+            <a href={% url 'settings' %}  class="collection-item"><i class="material-icons left">settings</i> Settings</a>
+        </div>
+
+        <p>{{ results }} results.</p>
+    </div>
+
+    
+    <div class="col s12 m8 l8">
+        <div class="row">
+            <form action="/restaurants" method="get">
+            <div class="input-field col s12">
+                <input id="search" name="s" type="text" class="validate">
+
+                <label for="s">Search for restaurants</label>
+            </div>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for restaurant in restaurants %}
+                    {% load filters %}
+                    <tr>
+                        <td>{{ restaurant.name }}</td>
+                         <td>{{ restaurant.location.coordinates }}</td> 
+
+                        <td>
+                            <a href={% url 'restaurant_view' id=restaurant|get:'_id' %}><i class="material-icons">edit</i></a>
+                            <a href="/deleterestaurant/{{ restaurant.id }}"><i class="material-icons">clear</i></a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.fixed-action-btn');
+            var instances = M.FloatingActionButton.init(elems, options);
+        });
+    </script>
+</div>
+</div>
+
+<div class="parallax-container">
+    <div class="parallax"><img src="{% static 'img/wall.jpg' %}"></div>
+</div>  
+
+{% endblock %}

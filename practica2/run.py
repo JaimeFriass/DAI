@@ -104,7 +104,7 @@ def mand():
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Hello, World! This is the index page'
 
 @app.route('/user/<username>')
 def show_user_profile(username):

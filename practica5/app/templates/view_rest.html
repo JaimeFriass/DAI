@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+#map {
+    width: 100%;
+    height: 600px;
+}
+</style>
+<div class="parallax-container">
+    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+
+</div>  
+
+<div class="container">
+    <div class="fixed-action-btn">
+    <a href="/editrestaurant/{{ restaurant._id }}" class="btn-floating btn-large light-blue lighten-1 modal-trigger">
+      <i class="large material-icons">edit</i>
+    </a>
+</div>
+
+
+        
+<div class="row main">
+    <div class="col s4">    
+            
+        <div class="collection">
+            <a href="/" class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
+            <a href="/posts" class="collection-item"><i class="material-icons left">view_module</i> Posts</a>
+            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+            <a href="/restaurants" class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
+            <a href="/settings" class="collection-item"><i class="material-icons left">settings</i> Settings</a>
+        </div>
+    
+    </div>
+    
+    <div class="col s8">
+        <div class="row">
+            <h1>{{ restaurant.name }}</h1>
+            <p>Coordinates: {{ restaurant.location.coordinates[0] }}, {{ restaurant.location.coordinates[1] }}</p>
+            <div id="floating-panel">
+                <input id="latlng" type="hidden" value="{{ restaurant.location.coordinates[1]}},{{ restaurant.location.coordinates[0] }}">
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="col s12">
+        <div class="row">
+            <div class="z-depth-2" id="map"></div>
+        </div>
+    </div>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: {lat: 40.731, lng: -73.997}
+        });
+        var geocoder = new google.maps.Geocoder;
+        var infowindow = new google.maps.InfoWindow;
+
+        geocodeLatLng(geocoder, map, infowindow);
+      }
+
+      function geocodeLatLng(geocoder, map, infowindow) {
+        var input = document.getElementById('latlng').value;
+        var latlngStr = input.split(',', 2);
+        var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+        geocoder.geocode({'location': latlng}, function(results, status) {
+          if (status === 'OK') {
+            if (results[0]) {
+              map.setZoom(11);
+              var marker = new google.maps.Marker({
+                position: latlng,
+                map: map
+              });
+              infowindow.setContent(results[0].formatted_address);
+              infowindow.open(map, marker);
+            } else {
+              window.alert('No results found');
+            }
+          } else {
+            window.alert('Geocoder failed due to: ' + status);
+          }
+        });
+      }
+    </script>
+
+
+    
+</div>
+</div>
+
+<div class="parallax-container">
+    <div class="parallax"><img src="static/img/wall.jpg"></div>
+</div>  
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXdm5CQraNVVxKBGVjK-_eyeDK8-MrmSU&callback=initMap">
+</script>
+
+{% endblock %}

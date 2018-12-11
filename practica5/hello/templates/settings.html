@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="parallax-container">
-    <div class="parallax"><img src="static/img/wall.jpg"></div>
+    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
 </div>  
 
 <div class="container">
@@ -11,17 +11,27 @@
     <div class="col s12 m4 l4">
             
         <div class="collection">
-            <a href="/" class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
-            <a href="/posts" class="collection-item"><i class="material-icons left">view_module</i> Posts</a>
-            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
-            <a href="/restaurants" class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
-            <a href="#" class="collection-item active"><i class="material-icons left">settings</i> Settings</a>
+            <a href={% url 'index' %} class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
+            <a href="" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
+            <a href={% url 'restaurants_view' %} class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
+            <a href={% url 'settings' %} class="collection-item active"><i class="material-icons left">settings</i> Settings</a>
         </div>
     </div>
     <div class="col s12 m8 s8">
        
                     <h5>My profile</h5>
                     <form action='' method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Modify
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div> 
+                    </div>
+                    </form>
+                    <!--
                     <div class="row">
                         <p>{{ print_name }}</p>
                         <div class="input-field col s12">
@@ -43,7 +53,10 @@
                             </button>
                         </div> 
                     </div>
-                    </form>    
+                    
+
+                    -->
+                        
     </div>
 
     <script>
@@ -56,7 +69,7 @@
 </div>
 
 <div class="parallax-container">
-    <div class="parallax"><img src="static/img/wall.jpg"></div>
+    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
 </div>  
 
 {% endblock %}
