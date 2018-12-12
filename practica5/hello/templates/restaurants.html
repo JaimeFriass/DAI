@@ -58,6 +58,11 @@
 <div class="row main">
     <div class="col s12 m12 l12">
         <div class="row">
+        <form action="" method="get">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+            <!--
             <form action="/restaurants" method="get">
             <div class="input-field col s12">
                 <input id="search" name="s" type="text" class="validate">
@@ -65,6 +70,7 @@
                 <label for="s">Search for restaurants</label>
             </div>
             </form>
+            -->
             <p>{{ results }} results.</p>
             <table>
                 <thead>

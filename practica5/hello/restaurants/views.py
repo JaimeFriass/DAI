@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import restaurants
-from .forms import LoginForm, RegisterForm, SettingsForm
+from .forms import LoginForm, RegisterForm, SettingsForm, SearchForm
 from bson.objectid import ObjectId
 from django.contrib.auth.models import User
 
@@ -40,11 +40,17 @@ def restaurant_edit(request, id):
 
 def restaurants_view(request):
     iterator = restaurants.find().limit(30)
+
+    if request.method == 'GET':
+        form = SearchForm(request.GET)
+    else:
+        form = SearchForm()
     context = {
         "session": request.session,
         "username": request.session['username'],
         "restaurants": list(iterator),
         "results": restaurants.find().count(),
+        "form": form
     }
     return render(request, 'restaurants.html', context)
 

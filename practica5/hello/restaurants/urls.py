@@ -1,5 +1,6 @@
 
 from django.conf.urls import url
+from django.shortcuts import redirect
 
 from . import views
 
@@ -11,10 +12,9 @@ urlpatterns = [
   url(r'^settings/', views.settings, name='settings'),
   url(r'^user/(?P<username>[-\w]+)$', views.user_view, name='user_view'),
 
-  url(r'^login/$', views.login_action, {'template_name': 'login.html'},
+  url(r'^login/$', views.login_action,
         name='login'),
-  url(r'^logout/$', views.logout_action,
-        {'next_page': url('login', views.login_action)}, name='logout'),
+  url(r'^logout/$', views.logout_action, name='logout'),
   
 
   # Restaurants
