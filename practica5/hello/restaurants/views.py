@@ -39,17 +39,24 @@ def restaurant_edit(request, id):
     return render(request, 'edit_rest.html', context)
 
 def restaurants_view(request):
-    iterator = restaurants.find().limit(30)
+    
 
     if request.method == 'GET':
         form = SearchForm(request.GET)
+        search = request.GET.get('search')
+        keyword = ".*" + str(search) + ".*"
+        iterator = restaurants.find({"name": {'$regex': str(keyword)}}).limit(25)
+        count = restaurants.find({"name": {'$regex': str(keyword)}}).count()
+        print(search)
     else:
         form = SearchForm()
+        iterator = restaurants.find().limit(30)
+        count = restaurants.find().count()
     context = {
         "session": request.session,
         "username": request.session['username'],
         "restaurants": list(iterator),
-        "results": restaurants.find().count(),
+        "results": count,
         "form": form
     }
     return render(request, 'restaurants.html', context)
