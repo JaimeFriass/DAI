@@ -43,3 +43,14 @@ class SearchForm(forms.Form):
                 widget=forms.TextInput(attrs={'class': 'form-control'}),\
                 label='Search')
 
+class NewRestaurant(forms.Form):
+    name = forms.CharField(max_length=80,\
+                widget=forms.TextInput(attrs={'class': 'form-control'}),\
+                label='Restaurant Name')
+    lat = forms.FloatField(required=True, max_value=100, min_value=-100, 
+        widget=forms.NumberInput()) 
+
+    long = forms.FloatField(required=True, max_value=100, min_value=-100, 
+        widget=forms.NumberInput()) 
+
+

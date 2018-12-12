@@ -22,4 +22,5 @@ urlpatterns = [
   url(r'^search/', views.restaurants_view, name='restaurants_view'),
   url(r'^view/(?P<id>[-\w]+)$', views.restaurant_view, name='restaurant_view'),
   url(r'^edit/(?P<id>[-\w]+)$', views.restaurant_edit, name='restaurant_edit'),
+  url(r'^delete/(?P<id>[-\w]+)$', views.restaurant_delete, name='restaurant_delete'),
 ]

@@ -20,21 +20,8 @@
     </a>
 </div>
 
-
-        
 <div class="row main">
-    <div class="col s4">    
-            
-        <div class="collection">
-            <a href={% url 'index' %} class="collection-item"><i class="material-icons left">bookmark</i> Index</a>
-            <a href="/last-pages" class="collection-item"><i class="material-icons left">history</i> Last pages</a>
-            <a href={% url 'restaurants_view' %} class="collection-item"><i class="material-icons left">restaurant</i> Restaurants</a>
-            <a href={% url 'settings' %} class="collection-item"><i class="material-icons left">settings</i> Settings</a>
-        </div>
-    
-    </div>
-    
-    <div class="col s8">
+    <div class="col s12">
         <div class="row">
             <h1>{{ restaurant.name }}</h1>
             <p>Coordinates: {{ restaurant.location.coordinates }}</p>

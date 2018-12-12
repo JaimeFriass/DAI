@@ -17,7 +17,6 @@
             {% if not login_page %}
             {% endcomment %}
             <li class="{% block home %}{% endblock %}"><a href={% url 'index' %}><i class="material-icons left">bookmark</i> Home</a></li>
-            <li class="{% block last_pages %}{% endblock %}"><a href="#"><i class="material-icons left">history</i> Last pages</a></li>
             <li class="{% block restaurants %}{% endblock %}"><a href={% url 'restaurants_view' %}><i class="material-icons left">restaurant</i> Restaurants</a></li>
             <li class="{% block settings %}{% endblock %}"><a href={% url 'settings' %}><i class="material-icons left">settings</i> Settings</a></li>
 

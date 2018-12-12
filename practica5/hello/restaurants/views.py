@@ -1,11 +1,12 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.contrib.auth import authenticate, login, logout
 from .models import restaurants
-from .forms import LoginForm, RegisterForm, SettingsForm, SearchForm
+from .forms import LoginForm, RegisterForm, SettingsForm, SearchForm, NewRestaurant
 from bson.objectid import ObjectId
 from django.contrib.auth.models import User
 
 def user_view(request, username):
+
     context = {
         "profile": User.objects.get(username=username),
         "session": request.session,
@@ -14,6 +15,11 @@ def user_view(request, username):
     return render(request, 'profile.html', context)
 
 def restaurant_view(request, id):
+
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
+
     oid = ObjectId(id)
     rest = restaurants.find_one({"_id": oid})
     print( rest['location']['coordinates'][0])
@@ -27,29 +33,83 @@ def restaurant_view(request, id):
     return render(request, 'view_rest.html', context)
 
 def restaurant_edit(request, id):
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
+
     oid = ObjectId(id)
     rest = restaurants.find_one({"_id": oid})
+
+    data = {
+        'name': rest['name'],
+        'lat': rest['location']['coordinates'][1],
+        'long': rest['location']['coordinates'][0]
+    }
+
+    form = NewRestaurant(data)
+
+    if request.method == 'POST':
+        form = NewRestaurant(request.POST)
+
+        if form.is_valid():
+            coordinates = [form.cleaned_data['lat'], form.cleaned_data['long'] ]
+            query = {"_id": oid}
+            newvalues = {"$set": {"location": {"coordinates": coordinates, "type": "Point"}, "name": form.cleaned_data['name']} }
+            return redirect('/restaurants/view/' + str(rest['_id']))
+        else:
+            print("ERROR: " + form.errors)
+            
     context = {
+        "form": form,
         "session": request.session,
         "username": request.session['username'],
         "restaurant": rest,
-        "coord0": rest['location']['coordinates'][1],
-        "coord1": rest['location']['coordinates'][0]
     }
     return render(request, 'edit_rest.html', context)
 
-def restaurants_view(request):
-    
+def restaurant_delete(request, id):
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
 
-    if request.method == 'GET':
+    oid = ObjectId(id)
+    print(oid)
+    restaurants.delete_one({"_id": oid})
+
+    return HttpResponseRedirect('/restaurants/search')
+
+def restaurants_view(request):
+
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
+    
+    # Initialize forms
+    form = SearchForm()
+    form_new = NewRestaurant()
+
+    # If new restaurant is sent
+    if request.method == 'POST':
+        form_new = NewRestaurant(request.POST)
+
+        if form_new.is_valid():
+            name = form_new.cleaned_data['name']
+            coordinates = [form_new.cleaned_data['lat'], form_new.cleaned_data['long'] ]
+            restaurants.insert({"location": {"coordinates": coordinates, "type":"Point"}, "name": name})
+        else:
+            print("ERROR: " + form_new.errors)
+
+
+    # If a search keyword is sent by GET method
+    if request.GET.get('search'):
         form = SearchForm(request.GET)
         search = request.GET.get('search')
         keyword = ".*" + str(search) + ".*"
-        iterator = restaurants.find({"name": {'$regex': str(keyword)}}).limit(25)
+        iterator = restaurants.find({"name": {'$regex': str(keyword)}}).limit(30)
         count = restaurants.find({"name": {'$regex': str(keyword)}}).count()
-        print(search)
+
+    # View all restaurants
     else:
-        form = SearchForm()
         iterator = restaurants.find().limit(30)
         count = restaurants.find().count()
     context = {
@@ -57,7 +117,8 @@ def restaurants_view(request):
         "username": request.session['username'],
         "restaurants": list(iterator),
         "results": count,
-        "form": form
+        "form": form,
+        "form_new": form_new
     }
     return render(request, 'restaurants.html', context)
 
@@ -153,3 +214,14 @@ def register_action(request):
     
     return render(request, 'register.html', context)
 
+
+# Save current page with log name in DB
+def save_page(log):
+    actual = session['username']
+    if db2.pages.find({"username": actual}).count() > 0:
+        db2.pages.update({"username": actual}, {"$push": {"pages": log}})
+        if len(db2.pages.find_one({"username": actual})['pages']) > 5:
+            db2.pages.update({"username": actual},{"$pop": {"pages": -1}}  )
+    else:
+        array_nuevo = [log]
+        db2.pages.insert({"username": actual, "pages": array_nuevo})
