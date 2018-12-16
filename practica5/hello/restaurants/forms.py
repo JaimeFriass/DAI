@@ -30,10 +30,10 @@ class LoginForm(forms.ModelForm):
 class SettingsForm(forms.ModelForm):
     first_name = forms.CharField(max_length=20,\
                 widget=forms.TextInput(attrs={'class': 'form-control'}),\
-                label='Display Name')
+                label='Display Name', required=False)
     password = forms.SlugField(max_length=15,\
            widget=forms.PasswordInput(attrs={'class': 'form-control mr-sm-2'}),\
-           label='Password:')
+           label='Password:', required=False)
     class Meta:
         model  = User
         fields = ('first_name', 'password')

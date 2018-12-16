@@ -55,10 +55,11 @@ def restaurant_edit(request, id):
             coordinates = [form.cleaned_data['lat'], form.cleaned_data['long'] ]
             query = {"_id": oid}
             newvalues = {"$set": {"location": {"coordinates": coordinates, "type": "Point"}, "name": form.cleaned_data['name']} }
+            restaurants.update_one( query, newvalues)
             return redirect('/restaurants/view/' + str(rest['_id']))
         else:
             print("ERROR: " + form.errors)
-            
+
     context = {
         "form": form,
         "session": request.session,
@@ -134,7 +135,9 @@ def settings(request):
 
         if form.is_valid():
             user = User.objects.get(username=request.session['username'])
+            user.first_name = first_name
             user.password = password
+            user.save()
         else:
             print("Error!")
 
@@ -213,15 +216,3 @@ def register_action(request):
             context['form'] = form
     
     return render(request, 'register.html', context)
-
-
-# Save current page with log name in DB
-def save_page(log):
-    actual = session['username']
-    if db2.pages.find({"username": actual}).count() > 0:
-        db2.pages.update({"username": actual}, {"$push": {"pages": log}})
-        if len(db2.pages.find_one({"username": actual})['pages']) > 5:
-            db2.pages.update({"username": actual},{"$pop": {"pages": -1}}  )
-    else:
-        array_nuevo = [log]
-        db2.pages.insert({"username": actual, "pages": array_nuevo})
