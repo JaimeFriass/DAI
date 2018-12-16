@@ -1,6 +1,8 @@
 Vagrantfile
 desktop.ini
 .vagrant
+*.pyc
+db.sqlite3
 practica5/hello/restaurants/__pycache__/*
 practica5/hello/restaurants/__pycache__/forms.cpython-36.pyc
 practica5/hello/restaurants/__pycache__/urls.cpython-36.pyc

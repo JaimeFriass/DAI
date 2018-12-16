@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+#map {
+    width: 100%;
+    height: 600px;
+}
+</style>
+<div class="parallax-container">
+    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+
+</div>  
+
+{% load filters %}
+<input name="rid" type="hidden" value="{{ restaurant|get:'_id' }}">
+<form action="" method="POST">
+<div class="container">
+        <div class="fixed-action-btn">
+        <button type="submit" href="" class="btn-floating btn-large light-blue lighten-1 modal-trigger">
+            <i class="large material-icons">save</i>
+        </button>
+</div>
+      
+<div class="row main">
+    <div class="col s12">
+        <div class="row">
+            
+                {% csrf_token %}
+                {{ form.as_p}}
+            
+            <!--
+            <input type="text" value="{{ restaurant.name }}" name="name" style="font-size: 33pt">
+            <div class="row">
+                <div class="col s12 m3 l3">
+                    Coordinates: 
+                </div>
+                <div class="col s12 m3 l3">
+                    <input type="number" value="{{ coord0 }}" name="lat">
+                </div>
+                <div class="col s12 m3 l3">
+                    <input type="number" value="{{ coord1 }}" name="long">
+                </div>
+            </div>
+            -->
+            <div id="floating-panel">
+                <input id="latlng" type="hidden" value="{{ coord0 }},{{ coord1 }}">
+            </div>
+            
+        
+        </div>
+    </div>
+</form>
+</div>
+</div>
+
+<div class="parallax-container">
+    <div class="parallax"><img src="../../static/img/wall.jpg"></div>
+</div>  
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXdm5CQraNVVxKBGVjK-_eyeDK8-MrmSU&callback=initMap">
+</script>
+
+{% endblock %}

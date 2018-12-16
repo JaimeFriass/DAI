@@ -53,3 +53,23 @@ class NewRestaurant(forms.Form):
 
     long = forms.FloatField(required=True, max_value=100, min_value=-100, 
         widget=forms.NumberInput()) 
+
+class NewDish(forms.Form):
+    name = forms.CharField(max_length=200,\
+                widget=forms.TextInput(attrs={'class': 'form-control input-field col s12'}),\
+                label='Name')
+    dish_type = forms.CharField(max_length=100,\
+                widget=forms.TextInput(attrs={'class': 'form-control input-field col s12'}),\
+                label='Type')
+    allergens = forms.CharField(max_length=200,\
+                widget=forms.TextInput(attrs={'class': 'form-control input-field col s12'}),\
+                label='Allergens')
+    price = forms.FloatField(required=True, max_value=200, min_value=0,
+        widget=forms.NumberInput()) 
+
+    class Meta:
+        model = Dish 
+        fields = ['name', 'dish_type', 'allergens', 'price']
+
+
+

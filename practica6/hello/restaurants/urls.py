@@ -15,13 +15,15 @@ urlpatterns = [
   url(r'^login/$', views.login_action,
         name='login'),
   url(r'^logout/$', views.logout_action, name='logout'),
-  
+
+  # Dishes
+  url(r'^dishes/', views.dishes_view, name='dishes_view'),
+  url(r'^delete_dish/(?P<id>[-\w]+)$', views.dish_delete, name='dish_delete'),
+
   # Restaurants
   url(r'^index/', views.index, name='index'),
   url(r'^search/', views.restaurants_view, name='restaurants_view'),
   url(r'^view/(?P<id>[-\w]+)$', views.restaurant_view, name='restaurant_view'),
   url(r'^edit/(?P<id>[-\w]+)$', views.restaurant_edit, name='restaurant_edit'),
   url(r'^delete/(?P<id>[-\w]+)$', views.restaurant_delete, name='restaurant_delete'),
-
-
 ]

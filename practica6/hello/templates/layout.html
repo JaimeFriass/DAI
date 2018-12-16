@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>{% block title %}Hello!{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/theme.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="/static/favicon.ico">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper #0097a7 cyan darken-2">
+            <a href="/" class="brand-logo">Hello there</a>
+            <ul class="right hide-on-med-and-down">
+            {% comment %}
+            {% if not login_page %}
+            {% endcomment %}
+            <li class="{% block home %}{% endblock %}"><a href={% url 'index' %}><i class="material-icons left">bookmark</i> Home</a></li>
+            <li class="{% block dishes %}{% endblock %}"><a href={% url 'dishes_view' %}><i class="material-icons left">restaurant</i> Dishes</a></li>
+            <li class="{% block restaurants %}{% endblock %}"><a href={% url 'restaurants_view' %}><i class="material-icons left">store_mall_directory</i> Restaurants</a></li>
+            <li class="{% block settings %}{% endblock %}"><a href={% url 'settings' %}><i class="material-icons left">settings</i> Settings</a></li>
+
+            {% block login %}
+                {% if 'username' not in session %}
+                <form action='' method="POST">
+                    <li><input class="nav-input" placeholder="User" name="username" id="username" type="text" class="validate"></li>
+                    <li><input class="nav-input" placeholder="Password" name="password" id="password" type="password" class="validate"></li>
+                    <input type="hidden" name="logout" id="logout" value="0">
+                    <li><button type="submit" class="waves-effect waves-light btn">Login</button></li>
+                    <li><a href={% url 'register' %} class="waves-effect waves-light btn">Register <i class="material-icons right">save_alt</i></a></li>
+                </form>
+                {% else %}
+                    <li><a href="/user/{{ username }}">{{ username }}</a></li>
+                    <li><a href={% url 'logout' %} type="submit" class="waves-effect waves-light btn">Log out <i class="material-icons left">vertical_align_top</i></a></li>
+                {% endif %}
+            {% endblock %}
+
+            {% comment %}
+            {% endif %}
+            {% endcomment %}
+            </ul>
+        </div>
+    </nav>
+
+
+    {% block content %}{% endblock %}
+
+<footer class="page-footer #0097a7 cyan darken-2">
+    <div class="container">
+        <div class="row">
+        <div class="col l6 s12">
+            <h5 class="white-text">Footer Content</h5>
+            <p class="grey-text text-lighten-4">Here goes the copyright and something else</p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+            <h5 class="white-text">Links</h5>
+            <ul>
+            <li><a class="grey-text text-lighten-3" href="/">Index</a></li>
+            <li><a class="grey-text text-lighten-3" href="/restaurantes">Restaurants</a></li>
+            <li><a class="grey-text text-lighten-3" href="/settings">Settings</a></li>
+            <li><a class="grey-text text-lighten-3" href="/logout">Sign out</a></li>
+            </ul>
+        </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+        © 2018 Copyright JaimeFrías
+        <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+        </div>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    M.AutoInit();
+</script>
+
+</body>
+</html>

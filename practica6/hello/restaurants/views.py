@@ -1,10 +1,52 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.contrib.auth import authenticate, login, logout
-from .models import restaurants
-from .forms import LoginForm, RegisterForm, SettingsForm, SearchForm, NewRestaurant
+from .models import restaurants, Dish
+from .forms import LoginForm, RegisterForm, SettingsForm, SearchForm, NewRestaurant, NewDish
 from bson.objectid import ObjectId
 from django.contrib.auth.models import User
+
+def dish_delete(request, id):
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
+
+    Dish.objects.filter(pk=id).delete()
+    print(id)
+
+    return HttpResponseRedirect('/restaurants/dishes')
+
+def dishes_view(request):
+    # Check session
+    if 'username' not in request.session:
+        return redirect('login')
+
+    form = NewDish()
+
+    if request.method == 'POST':
+        form = NewDish(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            dish_type = form.cleaned_data['dish_type']
+            allergens = form.cleaned_data['allergens']
+            price = form.cleaned_data['price']
+            item = Dish(name=name, dish_type=dish_type, allergens=allergens, price=price)
+            item.save()
+        else:
+            print("ERROR NEW DISH")
+
+
+    iterator = Dish.objects.all()
+
+    context = {
+        "form": form,
+        "session": request.session,
+        "username": request.session['username'],
+        "dishes": Dish.objects.all()
+    }
     
+    return render(request, 'dishes.html', context)
+
 def user_view(request, username):
 
     context = {
@@ -84,6 +126,9 @@ def restaurants_view(request):
     # Check session
     if 'username' not in request.session:
         return redirect('login')
+
+    pageNumber = 0
+    search = ""
     
     # Initialize forms
     form = SearchForm()
@@ -106,17 +151,35 @@ def restaurants_view(request):
         form = SearchForm(request.GET)
         search = request.GET.get('search')
         keyword = ".*" + str(search) + ".*"
-        iterator = restaurants.find({"name": {'$regex': str(keyword)}}).limit(30)
+        
         count = restaurants.find({"name": {'$regex': str(keyword)}}).count()
-
+        
+        # If a page number is sent by GET method
+        if request.GET.get('p'):
+            pageNumber = int(request.GET.get('p'))
+            iterator = restaurants.find({"name": {'$regex': str(keyword)}}).skip((pageNumber)*30).limit(30)
+        else:
+            iterator = restaurants.find({"name": {'$regex': str(keyword)}}).limit(30)
+            
     # View all restaurants
     else:
-        iterator = restaurants.find().limit(30)
+        if request.GET.get('p'):
+            pageNumber = int(request.GET.get('p'))
+            iterator = restaurants.find().skip((pageNumber)*30).limit(30)
+        else:
+            iterator = restaurants.find().limit(30)
+
         count = restaurants.find().count()
+
+    if search != "":
+        search = "&search=" + search
+        
     context = {
         "session": request.session,
         "username": request.session['username'],
         "restaurants": list(iterator),
+        "current_page": pageNumber,
+        "search": search,
         "results": count,
         "form": form,
         "form_new": form_new
@@ -148,6 +211,7 @@ def settings(request):
         }
 
     return render(request, 'settings.html', context)
+
 
 def index(request):
     if 'username' not in request.session:
