@@ -1,4 +1,4 @@
-# DAI
+
 ## Prácticas de Desarrollo de Aplicaciones en Internet
 
 Desarrollo de una aplicación web de búsqueda de restaurantes y platos utilizando **Python** (**Jinja** y **Django**) con **MongoDB**.
